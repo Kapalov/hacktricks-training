@@ -1,0 +1,30 @@
+name: Access AWS Secrets
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  retrieve-secret:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Assume AWS Role and Retrieve Secret
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::362356772159:role/sts-lab-2-target
+        role-session-name: GitHubActionSession
+      env:
+        AWS_WEB_IDENTITY_TOKEN_FILE: ${{ steps.id-token.outputs.token }}
+
+    - name: Get Secret from AWS Secrets Manager
+      run: |
+        aws secretsmanager get-secret-value --secret-id flag_sts_lab_2 --region us-east-1
