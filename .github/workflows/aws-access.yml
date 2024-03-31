@@ -14,16 +14,14 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3 # Updated to the latest version compatible with Node.js 20
 
     - name: Assume AWS Role and Retrieve Secret
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v2 # Assuming v2 is compatible with Node.js 20, check the latest version
       with:
         aws-region: us-east-1
         role-to-assume: arn:aws:iam::362356772159:role/sts-lab-2-target
         role-session-name: GitHubActionSession
-      env:
-        AWS_WEB_IDENTITY_TOKEN_FILE: ${{ steps.id-token.outputs.token }}
 
     - name: Get Secret from AWS Secrets Manager
       run: |
